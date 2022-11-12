@@ -12,7 +12,7 @@
 #ifdef __APPLE__
 #define INLINE
 #else
-#define INLINE inline
+#define INLINE
 #endif
 
 
@@ -33,6 +33,7 @@ typedef struct
    char * header;  /**< @brief Read header */
    char * data;    /**< @brief Read sequence */
    char * qscore;  /**< @brief Quality scores of sequence */
+   double score;
  } fastqRead;
 
 /** @brief A block representing a memory window of the read files

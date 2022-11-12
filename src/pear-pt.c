@@ -1203,6 +1203,7 @@ assembly_FORWARD_LONGER (fastqRead * forward, fastqRead * reverse, struct emp_fr
 
              reverse->data[nReverse   - best_overlap] = 0;
              reverse->qscore[nReverse - best_overlap] = 0;
+             forward->score = best_score;
            }
           else
            {
@@ -1232,6 +1233,7 @@ assembly_FORWARD_LONGER (fastqRead * forward, fastqRead * reverse, struct emp_fr
 
           forward->data[best_overlap + nReverse]   = 0;
           forward->qscore[best_overlap + nReverse] = 0;
+          forward->score = best_score;
         }
        else
         {
@@ -1253,6 +1255,7 @@ assembly_FORWARD_LONGER (fastqRead * forward, fastqRead * reverse, struct emp_fr
           forward->data[best_overlap]   = 0;
           forward->qscore[best_overlap] = 0;
           PEAR_SET_OUT_TYPE(forward,PEAR_READ_OUT_SINGLE);   /* flag that it's one piece */
+          forward->score = best_score;
         }
        else
         {
@@ -1384,6 +1387,7 @@ assembly_READS_EQUAL (fastqRead * forward, fastqRead * reverse, struct emp_freq 
            assemble_overlap (forward, reverse, 0, 0, n, forward, sw);
            forward->data[n]   = 0;
            forward->qscore[n] = 0;
+           forward->score = best_score;
          }
         else
          {
@@ -1414,6 +1418,7 @@ assembly_READS_EQUAL (fastqRead * forward, fastqRead * reverse, struct emp_freq 
 
            reverse->data[n   - best_overlap] = 0;
            reverse->qscore[n - best_overlap] = 0;
+           forward->score = best_score;
          }
         else
          {
@@ -1437,6 +1442,7 @@ assembly_READS_EQUAL (fastqRead * forward, fastqRead * reverse, struct emp_freq 
         forward->data[best_overlap]   = 0;
         forward->qscore[best_overlap] = 0;
         PEAR_SET_OUT_TYPE(forward,PEAR_READ_OUT_SINGLE);   /* flag that it's one piece */
+        forward->score = best_score;
       }
      else
       {
@@ -1621,6 +1627,7 @@ assembly_REVERSE_LONGER (fastqRead * forward, fastqRead * reverse, struct emp_fr
 
              reverse->data[nReverse   - best_overlap] = 0;
              reverse->qscore[nReverse - best_overlap] = 0;
+             forward->score = best_score;
            }
           else
            {
@@ -1653,6 +1660,7 @@ assembly_REVERSE_LONGER (fastqRead * forward, fastqRead * reverse, struct emp_fr
 
           reverse->data[best_overlap]   = 0;
           reverse->qscore[best_overlap] = 0;
+          forward->score = best_score;
         }
        else
         {
@@ -1674,6 +1682,7 @@ assembly_REVERSE_LONGER (fastqRead * forward, fastqRead * reverse, struct emp_fr
           forward->data[best_overlap]   = 0;
           forward->qscore[best_overlap] = 0;
           PEAR_SET_OUT_TYPE(forward,PEAR_READ_OUT_SINGLE);   /* flag that it's one piece */
+          forward->score = best_score;
         }
        else
         {
@@ -1831,6 +1840,7 @@ assembly (fastqRead * left, fastqRead * right, struct user_args  * sw)
            assemble_overlap (left, right, 0, 0, n, left, sw);
            left->data[n]   = 0;
            left->qscore[n] = 0;
+           left->score = best_score;
          }
         else
          {
@@ -1860,6 +1870,7 @@ assembly (fastqRead * left, fastqRead * right, struct user_args  * sw)
 
            right->data[n   - best_overlap] = 0;
            right->qscore[n - best_overlap] = 0;
+           left->score = best_score;
          }
         else
          {
@@ -1883,6 +1894,7 @@ assembly (fastqRead * left, fastqRead * right, struct user_args  * sw)
         left->data[best_overlap]   = 0;
         left->qscore[best_overlap] = 0;
         PEAR_SET_OUT_TYPE(left,PEAR_READ_OUT_SINGLE);   /* flag that it's one piece */
+        left->score = best_score;
       }
      else
       {
@@ -2086,7 +2098,7 @@ void write_data (fastqRead ** fwd, fastqRead ** rev, unsigned int elms, FILE ** 
      if (PEAR_DECODE_ASM_TYPE(fwd[i]) == PEAR_READ_ASSEMBLED)   /* assembled */
       {
         PEAR_RESET_ASM_TYPE(fwd[i]);
-        fprintf (fd[0], "%s\n", fwd[i]->header);
+        fprintf (fd[0], "%s score=%f\n", fwd[i]->header, fwd[i]->score);
         if (!bothOut)
          {
            fprintf (fd[0], "%s\n", fwd[i]->data);
